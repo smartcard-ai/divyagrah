@@ -1,11 +1,85 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Sparkles, Mail, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, Mail, ArrowRight, Volume2, VolumeX } from 'lucide-react';
 import './App.css';
 
 function App() {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const audioRef = useRef(null);
+  const lastMoveRef = useRef(Date.now());
+  const fadeIntervalRef = useRef(null);
+
+  useEffect(() => {
+    // Initialize audio
+    const audio = new Audio('/assets/om.mp3');
+    audio.loop = true;
+    audio.volume = 0;
+    audioRef.current = audio;
+
+    const handleInteraction = () => {
+      if (!isMuted && audio.paused) {
+        audio.play().catch(() => { });
+      }
+    };
+
+    window.addEventListener('click', handleInteraction);
+    window.addEventListener('mousemove', handleInteraction, { once: true });
+
+    return () => {
+      window.removeEventListener('click', handleInteraction);
+      audio.pause();
+    };
+  }, [isMuted]);
+
+  useEffect(() => {
+    if (isMuted) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.volume = 0;
+      }
+      return;
+    }
+
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleMouseMove = () => {
+      lastMoveRef.current = Date.now();
+
+      // If paused (due to browser policy or stopping), try to play
+      if (audio.paused) {
+        audio.play().catch(() => { });
+      }
+
+      // Smoothly increase volume when moving
+      if (audio.volume < 0.4) {
+        audio.volume = Math.min(0.4, audio.volume + 0.05);
+      }
+    };
+
+    // Fade out volume when mouse stops
+    const checkMovement = () => {
+      if (Date.now() - lastMoveRef.current > 500) {
+        if (audio.volume > 0) {
+          audio.volume = Math.max(0, audio.volume - 0.02);
+          if (audio.volume === 0 && !audio.paused) {
+            // Optional: pause if volume reaches 0 to save performance
+            // But leaving it playing at 0 is smoother for resumes
+          }
+        }
+      }
+    };
+
+    const interval = setInterval(checkMovement, 50);
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearInterval(interval);
+    };
+  }, [isMuted]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,6 +95,16 @@ function App() {
   return (
     <div className="coming-soon-container">
       <div className="overlay"></div>
+
+      {/* Sound Toggle */}
+      <button
+        className={`sound-toggle glass ${isMuted ? 'muted' : 'active'}`}
+        onClick={() => setIsMuted(!isMuted)}
+        title={isMuted ? "Unmute Divine Sound" : "Mute Sound"}
+      >
+        {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+        <span className="sound-text">{isMuted ? "Enable Sound" : "Sound On"}</span>
+      </button>
 
       {/* Background Elements */}
       <div className="bg-gradient-orb orb-1"></div>
