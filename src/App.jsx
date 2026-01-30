@@ -1,54 +1,4 @@
 import React, { useState } from 'react';
-import './App.css';
-
-const products = [
-  {
-    id: 1,
-    name: "Classic Mysore Sandalwood Agarbatti",
-    category: "Agarbatti Sticks",
-    price: "₹150",
-    image: "/assets/agarbatti.png",
-    amazonUrl: "https://www.amazon.in/s?k=divyagrah+agarbatti",
-    description: "Pure sandalwood fragrance for your daily pooja and meditation.",
-    usage: ["Pooja", "Meditation"],
-    color: "Brown"
-  },
-  {
-    id: 2,
-    name: "Traditional Temple Dhoop Cones",
-    category: "Dhoop",
-    price: "₹120",
-    image: "/assets/dhoop.png",
-    amazonUrl: "https://www.amazon.in/s?k=divyagrah+dhoop",
-    description: "Long-lasting aromatic dhoop cones made with natural resins.",
-    usage: ["Pooja", "Fragrance"],
-    color: "Dark Brown"
-  },
-  {
-    id: 3,
-    name: "Premium Lavender Incense Sticks",
-    category: "Incense Sticks",
-    price: "₹180",
-    image: "/assets/hero.png",
-    amazonUrl: "https://www.amazon.in/s?k=divyagrah+incense+sticks",
-    description: "Relaxing lavender scent to create a serene environment at home.",
-    usage: ["Fragrance", "Meditation"],
-    color: "Brown"
-  },
-  {
-    id: 4,
-    name: "Sacred Guggul Dhoop",
-    category: "Dhoop",
-    price: "₹140",
-    image: "/assets/dhoop.png",
-    amazonUrl: "https://www.amazon.in/s?k=divyagrah+dhoop",
-    description: "Authentic Guggul dhoop for spiritual purification.",
-    usage: ["Pooja"],
-    color: "Natural Brown"
-  }
-];
-
-import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Mail, ArrowRight } from 'lucide-react';
 import './App.css';
@@ -148,7 +98,5 @@ function App() {
     </div>
   );
 }
-
-export default App;
 
 export default App;
